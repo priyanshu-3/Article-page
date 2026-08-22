@@ -1,0 +1,53 @@
+import { Article } from '../types/article';
+
+export const mockArticles: Article[] = [
+  {
+    id: '1',
+    title: 'The Art of Writing Clean Code',
+    author: {
+      id: 'author-1',
+      name: 'Jane Doe',
+      avatarUrl: 'https://example.com/avatar1.jpg',
+    },
+    publishDate: '2023-10-15T10:00:00Z',
+    publishedAt: '2023-10-15T10:00:00Z',
+    readingTime: '5 min read',
+    excerpt: 'Discover key principles and practices for writing maintainable and scalable code.',
+    body: 'Clean code is simple, direct, and readable. Writing clean code requires discipline and adherence to best practices standard across modern software development.',
+    content: 'Clean code is simple, direct, and readable. Writing clean code requires discipline and adherence to best practices standard across modern software development.',
+    slug: 'art-of-writing-clean-code',
+    isPublished: true,
+    status: 'published',
+  },
+  {
+    id: '2',
+    title: 'Designing Accessible Web Applications',
+    author: 'John Smith',
+    publishDate: '2023-10-20T14:30:00Z',
+    publishedAt: '2023-10-20T14:30:00Z',
+    readingTime: '8 min read',
+    excerpt: 'Learn how to build inclusive web interfaces that everyone can use effectively.',
+    body: 'Accessibility is not an afterthought; it is a fundamental aspect of user interface design. When building web applications, accessibility must be prioritized.',
+    content: 'Accessibility is not an afterthought; it is a fundamental aspect of user interface design. When building web applications, accessibility must be prioritized.',
+    slug: 'designing-accessible-web-applications',
+    isPublished: true,
+    status: 'published',
+  },
+  {
+    id: '3',
+    title: 'State Management Patterns in Modern Frontend',
+    author: {
+      id: 'author-2',
+      name: 'Alice Johnson',
+    },
+    publishDate: '2023-11-01T09:15:00Z',
+    publishedAt: '2023-11-01T09:15:00Z',
+    readingTime: '6 min read',
+    excerpt: 'An in-depth look into modern state management paradigms and best practices.',
+    body: 'Managing application state effectively is crucial for performance and developer productivity. In this article, we explore modern reactive architectures.',
+    content: 'Managing application state effectively is crucial for performance and developer productivity. In this article, we explore modern reactive architectures.',
+    slug: 'state-management-patterns',
+    isPublished: true,
+    status: 'published',
+  },
+];
