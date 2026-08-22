@@ -1,31 +1,46 @@
 import { Article } from '../types/article';
 
-export const MOCK_ARTICLES: Article[] = [
+export const mockArticles: Article[] = [
   {
     id: '1',
-    title: 'The Art of Minimalist Field Notes',
-    author: 'Elena Rostova',
-    publishDate: '2023-10-24T09:00:00Z',
-    readingTime: '4 min read',
-    excerpt: 'Discover how keeping concise daily observations can radically improve software architecture decisions.',
-    body: 'Keeping field notes is an ancient practice refined by naturalists, explorers, and scientists. In modern software engineering, field notes serve as a lightweight log of system behaviors, architectural trade-offs, and unexpected bugs encountered during development.'
+    slug: 'welcome-to-field-notes',
+    title: 'Welcome to Field Notes',
+    author: 'Editorial Team',
+    publishDate: '2025-03-30T10:00:00Z',
+    publishedAt: '2025-03-30T10:00:00Z',
+    readingTime: '5 min read',
+    excerpt: 'Field Notes is designed for thoughtful, long-form reading and writing.',
+    body: 'Field Notes is designed for thoughtful, long-form reading and writing. Our focus is on editorial presentation, typography, and content clarity across all devices.\n\nCrafted for Readers:\nWith carefully selected font proportions, generous line height, and a centered reading width, articles are effortless to read whether on desktop, tablet, or mobile screens.',
+    content: 'Field Notes is designed for thoughtful, long-form reading and writing. Our focus is on editorial presentation, typography, and content clarity across all devices.',
+    isPublished: true,
+    status: 'published',
   },
   {
     id: '2',
-    title: 'Building Resilient State Stores in TypeScript',
-    author: 'Marcus Vance',
-    publishDate: '2023-11-02T14:30:00Z',
-    readingTime: '6 min read',
-    excerpt: 'A deep dive into in-memory store designs with predictable sorting and data integrity.',
-    body: 'State management does not always require heavy reactive frameworks. In many application boundaries, a clean, well-typed in-memory service provides superior performance and easier testability.'
+    slug: 'the-art-of-long-form-writing',
+    title: 'The Art of Long-Form Writing',
+    author: 'Jane Doe',
+    publishDate: '2025-03-28T14:30:00Z',
+    publishedAt: '2025-03-28T14:30:00Z',
+    readingTime: '7 min read',
+    excerpt: 'Exploring why depth and patience in writing resonate deeper in a fast-paced digital world.',
+    body: 'In an era dominated by short snippets and superficial updates, long-form writing stands out as a sanctuary for deep thought and nuanced ideas.',
+    content: 'In an era dominated by short snippets and superficial updates, long-form writing stands out as a sanctuary for deep thought and nuanced ideas.',
+    isPublished: true,
+    status: 'published',
   },
   {
     id: '3',
-    title: 'Understanding Modern Web Performance',
-    author: 'Sophia Chen',
-    publishDate: '2023-09-15T11:15:00Z',
-    readingTime: '8 min read',
-    excerpt: 'Key strategies for optimizing frontend data flow and initial render times.',
-    body: 'Performance is a feature. When designing data access patterns, minimizing synchronous transformations and providing fast lookup structures ensures a responsive user interface.'
-  }
+    slug: 'typography-in-digital-editorial',
+    title: 'Typography in Digital Editorial Design',
+    author: 'Alex Rivera',
+    publishDate: '2025-03-25T09:15:00Z',
+    publishedAt: '2025-03-25T09:15:00Z',
+    readingTime: '4 min read',
+    excerpt: 'How layout, font pairing, and vertical rhythm transform the reading experience online.',
+    body: 'Good typography is invisible. When readers engage with an article without distraction or visual fatigue, typography has done its job.',
+    content: 'Good typography is invisible. When readers engage with an article without distraction or visual fatigue, typography has done its job.',
+    isPublished: true,
+    status: 'published',
+  },
 ];
