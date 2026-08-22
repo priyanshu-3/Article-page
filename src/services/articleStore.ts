@@ -1,54 +1,75 @@
 import { Article, CreateArticleInput } from '../types/article';
-import { MOCK_ARTICLES } from '../data/mockArticles';
+import { mockArticles } from '../data/mockArticles';
 
 export class ArticleStore {
   private articles: Article[];
 
-  constructor(initialArticles: Article[] = MOCK_ARTICLES) {
+  constructor(initialArticles: Article[] = mockArticles) {
     this.articles = [...initialArticles];
   }
 
   /**
-   * Retrieves all articles sorted with most recent first.
+   * Retrieve all articles sorted with most recent publishDate first.
    */
   public getAllArticles(): Article[] {
-    return [...this.articles].sort(
-      (a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime()
-    );
+    return [...this.articles].sort((a, b) => {
+      const dateA = new Date(a.publishDate || a.publishedAt || 0).getTime();
+      const dateB = new Date(b.publishDate || b.publishedAt || 0).getTime();
+      return dateB - dateA;
+    });
+  }
+
+  public getArticles(): Article[] {
+    return this.getAllArticles();
   }
 
   /**
-   * Fetches a single article by id.
+   * Fetch a single article by ID.
    */
   public getArticleById(id: string): Article | undefined {
     return this.articles.find((article) => article.id === id);
   }
 
+  public getArticle(id: string): Article | undefined {
+    return this.getArticleById(id);
+  }
+
   /**
-   * Adds a new article to the dataset.
-   * Auto-generates an ID if not provided, adds it to the store, and returns the newly created article.
+   * Add a new article to the dataset.
+   * Auto-generates an ID if missing and returns the created Article.
    */
-  public addArticle(articleData: CreateArticleInput): Article {
+  public addArticle(articleInput: CreateArticleInput): Article {
     const id =
-      articleData.id ||
-      (typeof crypto !== 'undefined' && crypto.randomUUID
-        ? crypto.randomUUID()
-        : `article_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`);
+      articleInput.id ||
+      `article-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    const publishDate =
+      articleInput.publishDate || articleInput.publishedAt || new Date().toISOString();
+    const body = articleInput.body ?? articleInput.content ?? '';
+    const content = articleInput.content ?? body;
+    const publishedAt = articleInput.publishedAt || publishDate;
 
     const newArticle: Article = {
-      ...articleData,
+      ...articleInput,
       id,
+      title: articleInput.title || 'Untitled Article',
+      author: articleInput.author || 'Anonymous',
+      publishDate,
+      publishedAt,
+      readingTime: articleInput.readingTime || '1 min read',
+      excerpt: articleInput.excerpt || '',
+      body,
+      content,
     };
 
-    this.articles.push(newArticle);
+    this.articles.unshift(newArticle);
     return newArticle;
   }
 
   /**
-   * Resets store back to specified articles or default mock dataset.
+   * Reset store to initial articles.
    */
-  public reset(articles: Article[] = MOCK_ARTICLES): void {
-    this.articles = [...articles];
+  public reset(initialArticles: Article[] = mockArticles): void {
+    this.articles = [...initialArticles];
   }
 }
 
