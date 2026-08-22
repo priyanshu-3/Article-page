@@ -1,31 +1,53 @@
 import { Article } from '../types/article';
 
-export const MOCK_ARTICLES: Article[] = [
+export const mockArticles: Article[] = [
   {
     id: '1',
-    title: 'Getting Started with Field Notes',
-    author: 'Sarah Jenkins',
-    publishDate: '2023-10-01T08:00:00Z',
-    readingTime: '3 min read',
-    excerpt: 'Welcome to Field Notes, a lightweight article management and publishing platform.',
-    body: 'Field Notes is designed to give writers and developers a clean, uncluttered interface for creating and reading articles...'
+    title: 'The Art of Writing Clean Code',
+    author: {
+      id: 'author-1',
+      name: 'Jane Doe',
+      avatarUrl: 'https://example.com/avatar1.jpg',
+    },
+    publishDate: '2023-10-15T10:00:00Z',
+    publishedAt: '2023-10-15T10:00:00Z',
+    readingTime: '5 min read',
+    excerpt: 'Discover key principles and practices for writing maintainable and scalable code.',
+    body: 'Clean code is simple, direct, and readable. Writing clean code requires discipline and adherence to best practices standard across modern software development.',
+    content: 'Clean code is simple, direct, and readable. Writing clean code requires discipline and adherence to best practices standard across modern software development.',
+    slug: 'art-of-writing-clean-code',
+    isPublished: true,
+    status: 'published',
   },
   {
     id: '2',
-    title: 'Designing for Readability and Performance',
-    author: 'Marcus Vance',
-    publishDate: '2023-11-15T12:30:00Z',
-    readingTime: '5 min read',
-    excerpt: 'How thoughtful UI choices and clean state management elevate user experience.',
-    body: 'When building modern web applications, speed and clarity are paramount...'
+    title: 'Designing Accessible Web Applications',
+    author: 'John Smith',
+    publishDate: '2023-10-20T14:30:00Z',
+    publishedAt: '2023-10-20T14:30:00Z',
+    readingTime: '8 min read',
+    excerpt: 'Learn how to build inclusive web interfaces that everyone can use effectively.',
+    body: 'Accessibility is not an afterthought; it is a fundamental aspect of user interface design. When building web applications, accessibility must be prioritized.',
+    content: 'Accessibility is not an afterthought; it is a fundamental aspect of user interface design. When building web applications, accessibility must be prioritized.',
+    slug: 'designing-accessible-web-applications',
+    isPublished: true,
+    status: 'published',
   },
   {
     id: '3',
-    title: 'Effective In-Memory State Architecture',
-    author: 'Elena Rostova',
-    publishDate: '2023-12-20T16:45:00Z',
-    readingTime: '4 min read',
-    excerpt: 'Exploring patterns for local state management in modern JavaScript/TypeScript applications.',
-    body: 'Managing application state cleanly without unnecessary dependencies keeps codebases agile and fast...'
-  }
+    title: 'State Management Patterns in Modern Frontend',
+    author: {
+      id: 'author-2',
+      name: 'Alice Johnson',
+    },
+    publishDate: '2023-11-01T09:15:00Z',
+    publishedAt: '2023-11-01T09:15:00Z',
+    readingTime: '6 min read',
+    excerpt: 'An in-depth look into modern state management paradigms and best practices.',
+    body: 'Managing application state effectively is crucial for performance and developer productivity. In this article, we explore modern reactive architectures.',
+    content: 'Managing application state effectively is crucial for performance and developer productivity. In this article, we explore modern reactive architectures.',
+    slug: 'state-management-patterns',
+    isPublished: true,
+    status: 'published',
+  },
 ];
