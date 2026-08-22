@@ -1,46 +1,31 @@
 import { Article } from '../types/article';
 
-export const mockArticles: Article[] = [
+export const MOCK_ARTICLES: Article[] = [
   {
     id: '1',
-    slug: 'welcome-to-field-notes',
-    title: 'Welcome to Field Notes',
-    author: 'Editorial Team',
-    publishDate: '2025-03-30T10:00:00Z',
-    publishedAt: '2025-03-30T10:00:00Z',
-    readingTime: '5 min read',
-    excerpt: 'Field Notes is designed for thoughtful, long-form reading and writing.',
-    body: 'Field Notes is designed for thoughtful, long-form reading and writing. Our focus is on editorial presentation, typography, and content clarity across all devices.\n\nCrafted for Readers:\nWith carefully selected font proportions, generous line height, and a centered reading width, articles are effortless to read whether on desktop, tablet, or mobile screens.',
-    content: 'Field Notes is designed for thoughtful, long-form reading and writing. Our focus is on editorial presentation, typography, and content clarity across all devices.',
-    isPublished: true,
-    status: 'published',
+    title: 'Getting Started with Field Notes',
+    author: 'Sarah Jenkins',
+    publishDate: '2023-10-01T08:00:00Z',
+    readingTime: '3 min read',
+    excerpt: 'Welcome to Field Notes, a lightweight article management and publishing platform.',
+    body: 'Field Notes is designed to give writers and developers a clean, uncluttered interface for creating and reading articles...'
   },
   {
     id: '2',
-    slug: 'the-art-of-long-form-writing',
-    title: 'The Art of Long-Form Writing',
-    author: 'Jane Doe',
-    publishDate: '2025-03-28T14:30:00Z',
-    publishedAt: '2025-03-28T14:30:00Z',
-    readingTime: '7 min read',
-    excerpt: 'Exploring why depth and patience in writing resonate deeper in a fast-paced digital world.',
-    body: 'In an era dominated by short snippets and superficial updates, long-form writing stands out as a sanctuary for deep thought and nuanced ideas.',
-    content: 'In an era dominated by short snippets and superficial updates, long-form writing stands out as a sanctuary for deep thought and nuanced ideas.',
-    isPublished: true,
-    status: 'published',
+    title: 'Designing for Readability and Performance',
+    author: 'Marcus Vance',
+    publishDate: '2023-11-15T12:30:00Z',
+    readingTime: '5 min read',
+    excerpt: 'How thoughtful UI choices and clean state management elevate user experience.',
+    body: 'When building modern web applications, speed and clarity are paramount...'
   },
   {
     id: '3',
-    slug: 'typography-in-digital-editorial',
-    title: 'Typography in Digital Editorial Design',
-    author: 'Alex Rivera',
-    publishDate: '2025-03-25T09:15:00Z',
-    publishedAt: '2025-03-25T09:15:00Z',
+    title: 'Effective In-Memory State Architecture',
+    author: 'Elena Rostova',
+    publishDate: '2023-12-20T16:45:00Z',
     readingTime: '4 min read',
-    excerpt: 'How layout, font pairing, and vertical rhythm transform the reading experience online.',
-    body: 'Good typography is invisible. When readers engage with an article without distraction or visual fatigue, typography has done its job.',
-    content: 'Good typography is invisible. When readers engage with an article without distraction or visual fatigue, typography has done its job.',
-    isPublished: true,
-    status: 'published',
-  },
+    excerpt: 'Exploring patterns for local state management in modern JavaScript/TypeScript applications.',
+    body: 'Managing application state cleanly without unnecessary dependencies keeps codebases agile and fast...'
+  }
 ];
