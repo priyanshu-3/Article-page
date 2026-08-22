@@ -10,57 +10,81 @@ describe('ArticleStore', () => {
       title: 'Older Article',
       author: 'Author A',
       publishDate: '2023-01-01T00:00:00Z',
-      readingTime: '3 min read',
-      excerpt: 'Excerpt 1',
-      body: 'Body 1'
+      readingTime: '2 min read',
+      excerpt: 'Older excerpt',
+      body: 'Older body content',
     },
     {
       id: '2',
       title: 'Newer Article',
       author: 'Author B',
       publishDate: '2023-06-01T00:00:00Z',
-      readingTime: '5 min read',
-      excerpt: 'Excerpt 2',
-      body: 'Body 2'
-    }
+      readingTime: '4 min read',
+      excerpt: 'Newer excerpt',
+      body: 'Newer body content',
+    },
   ];
 
   beforeEach(() => {
     store = new ArticleStore(sampleArticles);
   });
 
-  it('should retrieve all articles sorted with most recent first', () => {
+  test('getAllArticles returns articles sorted with most recent first', () => {
     const articles = store.getAllArticles();
     expect(articles).toHaveLength(2);
     expect(articles[0].id).toBe('2');
     expect(articles[1].id).toBe('1');
   });
 
-  it('should fetch a single article by id', () => {
+  test('getArticleById returns article when id exists', () => {
     const article = store.getArticleById('1');
     expect(article).toBeDefined();
     expect(article?.title).toBe('Older Article');
   });
 
-  it('should return undefined when fetching non-existent article id', () => {
-    const article = store.getArticleById('non-existent');
+  test('getArticleById returns undefined when id does not exist', () => {
+    const article = store.getArticleById('999');
     expect(article).toBeUndefined();
   });
 
-  it('should add a new article to dataset', () => {
-    const newArt = store.addArticle({
+  test('addArticle returns created article and auto-generates ID when missing', () => {
+    const newArticleInput = {
       title: 'Brand New Article',
       author: 'Author C',
       publishDate: '2023-12-01T00:00:00Z',
-      readingTime: '2 min read',
-      excerpt: 'Excerpt 3',
-      body: 'Body 3'
-    });
+      readingTime: '5 min read',
+      excerpt: 'Brand new excerpt',
+      body: 'Brand new body content',
+    };
 
+    const newArt = store.addArticle(newArticleInput);
+
+    expect(newArt).toBeDefined();
     expect(newArt.id).toBeDefined();
+    expect(typeof newArt.id).toBe('string');
+    expect(newArt.title).toBe('Brand New Article');
 
-    const articles = store.getAllArticles();
-    expect(articles).toHaveLength(3);
-    expect(articles[0].id).toBe(newArt.id);
+    const retrieved = store.getArticleById(newArt.id);
+    expect(retrieved).toEqual(newArt);
+
+    const allArticles = store.getAllArticles();
+    expect(allArticles[0].id).toBe(newArt.id);
+  });
+
+  test('addArticle respects provided ID', () => {
+    const customIdInput = {
+      id: 'custom-123',
+      title: 'Custom ID Article',
+      author: 'Author D',
+      publishDate: '2023-03-01T00:00:00Z',
+      readingTime: '3 min read',
+      excerpt: 'Custom excerpt',
+      body: 'Custom body',
+    };
+
+    const newArt = store.addArticle(customIdInput);
+
+    expect(newArt.id).toBe('custom-123');
+    expect(store.getArticleById('custom-123')).toBeDefined();
   });
 });
