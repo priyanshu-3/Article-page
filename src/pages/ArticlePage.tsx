@@ -1,94 +1,77 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useArticleStore } from '../context/ArticleContext';
-import { EmptyState } from '../components/EmptyState';
-import { formatDate, getAuthorName } from '../utils/formatters';
-import { Article } from '../types/article';
 import './ArticlePage.css';
 
 export const ArticlePage: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const store = useArticleStore();
+  const { id } = useParams<{ id?: string }>();
+  const articleStore = useArticleStore();
 
-  const article: Article | undefined = React.useMemo(() => {
-    if (!id) return undefined;
-
-    if (typeof store.getArticleById === 'function') {
-      const found = store.getArticleById(id);
-      if (found) return found;
-    }
-    if (typeof store.getArticleBySlug === 'function') {
-      const found = store.getArticleBySlug(id);
-      if (found) return found;
-    }
-    if (typeof store.getArticle === 'function') {
-      const found = store.getArticle(id);
-      if (found) return found;
-    }
-    const published = store.getPublishedArticles ? store.getPublishedArticles() : [];
-    const foundInPublished = published.find(
-      (a: Article) => a.id === id || a.slug === id
-    );
-    if (foundInPublished) return foundInPublished;
-
-    const all = store.articles || [];
-    return all.find((a: Article) => a.id === id || a.slug === id);
-  }, [id, store]);
+  const article = id
+    ? articleStore.getArticleById
+      ? articleStore.getArticleById(id)
+      : articleStore.articles?.find((a) => a.id === id || a.slug === id)
+    : undefined;
 
   if (!article) {
     return (
-      <main className="article-page missing-article">
-        <nav className="article-nav" aria-label="Breadcrumb">
+      <main className="article-page missing-article" data-testid="missing-article">
+        <nav className="back-nav">
           <Link to="/" className="back-link">
             ← Back to Home
           </Link>
         </nav>
-        <EmptyState
-          title="Article Not Found"
-          description="The article you are looking for does not exist or may have been removed."
-          actionText="Return to Home"
-          actionUrl="/"
-        />
+        <div className="missing-article-container">
+          <h2>Article Not Found</h2>
+          <p>The article you are looking for does not exist or may have been removed.</p>
+          <Link to="/" className="btn-home">
+            Return to Home
+          </Link>
+        </div>
       </main>
     );
   }
 
-  const formattedDate = formatDate(article.publishedAt);
-  const authorName = getAuthorName(article.author);
-  const contentText = article.content || article.excerpt;
-  const paragraphs = contentText ? contentText.split('\n\n').filter(Boolean) : [];
+  const authorName =
+    typeof article.author === 'string'
+      ? article.author
+      : article.author?.name || 'Anonymous';
+
+  const bodyText = article.content || article.excerpt || '';
 
   return (
-    <main className="article-page" data-testid="article-detail">
-      <nav className="article-nav" aria-label="Breadcrumb">
-        <Link to="/" className="back-link" aria-label="Return to Home page">
-          ← Back to Articles
+    <main className="article-page">
+      <nav className="back-nav">
+        <Link to="/" className="back-link">
+          ← Back to Home
         </Link>
       </nav>
 
-      <article className="article-container">
+      <article className="article-detail">
         <header className="article-header">
           <h1 className="article-title">{article.title}</h1>
           <div className="article-meta">
             <span className="article-author">By {authorName}</span>
-            <span className="meta-separator" aria-hidden="true">
-              •
-            </span>
-            <time dateTime={article.publishedAt} className="article-date">
-              {formattedDate}
-            </time>
-            <span className="meta-separator" aria-hidden="true">
-              •
-            </span>
-            <span className="article-reading-time">{article.readingTime}</span>
+            {article.publishedAt && (
+              <>
+                <span className="meta-separator">•</span>
+                <time className="article-date" dateTime={article.publishedAt}>
+                  {article.publishedAt}
+                </time>
+              </>
+            )}
+            {article.readingTime && (
+              <>
+                <span className="meta-separator">•</span>
+                <span className="article-reading-time">{article.readingTime}</span>
+              </>
+            )}
           </div>
         </header>
 
-        <section className="article-body">
-          {paragraphs.map((paragraph, index) => (
-            <p key={index} className="article-paragraph">
-              {paragraph}
-            </p>
+        <section className="article-content">
+          {bodyText.split('\n\n').map((paragraph, index) => (
+            <p key={index}>{paragraph}</p>
           ))}
         </section>
       </article>
