@@ -1,71 +1,42 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { Article } from '../types/article';
-import { mockArticles } from '../data/mockArticles';
+import { Article, CreateArticleInput } from '../types/article';
+import { ArticleStore, articleStore as defaultStore } from '../services/articleStore';
 
-export interface ArticleContextType {
+interface ArticleContextType {
   articles: Article[];
-  getAllArticles: () => Article[];
   getPublishedArticles: () => Article[];
   getArticleById: (id: string) => Article | undefined;
-  addArticle: (article: Article) => void;
+  addArticle: (article: CreateArticleInput) => Article;
 }
 
 const ArticleContext = createContext<ArticleContextType | undefined>(undefined);
 
-export const ArticleProvider: React.FC<{
-  children: ReactNode;
-  initialArticles?: Article[];
-}> = ({ children, initialArticles = mockArticles }) => {
-  const [articles, setArticles] = useState<Article[]>(initialArticles);
-
-  const getAllArticles = (): Article[] => {
-    return [...articles].sort((a, b) => {
-      const dateA = new Date(a.publishDate || a.publishedAt || 0).getTime();
-      const dateB = new Date(b.publishDate || b.publishedAt || 0).getTime();
-      return dateB - dateA;
-    });
-  };
+export const ArticleProvider: React.FC<{ children: ReactNode; initialArticles?: Article[] }> = ({
+  children,
+  initialArticles,
+}) => {
+  const [store] = useState(() => new ArticleStore(initialArticles));
+  const [articles, setArticles] = useState<Article[]>(() => store.getAllArticles());
 
   const getPublishedArticles = (): Article[] => {
-    return articles
-      .filter((article) => article.isPublished !== false && article.status !== 'draft')
-      .sort((a, b) => {
-        const dateA = new Date(a.publishDate || a.publishedAt || 0).getTime();
-        const dateB = new Date(b.publishDate || b.publishedAt || 0).getTime();
-        return dateB - dateA;
-      });
+    return store
+      .getAllArticles()
+      .filter((article) => article.isPublished !== false && article.status !== 'draft');
   };
 
   const getArticleById = (id: string): Article | undefined => {
-    return articles.find((article) => article.id === id);
+    return store.getArticleById(id);
   };
 
-  const addArticle = (article: Article) => {
-    const publishDate = article.publishDate || article.publishedAt || new Date().toISOString();
-    const publishedAt = article.publishedAt || publishDate;
-    const body = article.body || article.content || '';
-    const content = article.content || body;
-
-    const newArticle: Article = {
-      ...article,
-      publishDate,
-      publishedAt,
-      body,
-      content,
-    };
-
-    setArticles((prev) => [newArticle, ...prev]);
+  const addArticle = (articleInput: CreateArticleInput): Article => {
+    const newArt = store.addArticle(articleInput);
+    setArticles(store.getAllArticles());
+    return newArt;
   };
 
   return (
     <ArticleContext.Provider
-      value={{
-        articles,
-        getAllArticles,
-        getPublishedArticles,
-        getArticleById,
-        addArticle,
-      }}
+      value={{ articles, getPublishedArticles, getArticleById, addArticle }}
     >
       {children}
     </ArticleContext.Provider>
@@ -76,11 +47,10 @@ export const useArticleStore = (): ArticleContextType => {
   const context = useContext(ArticleContext);
   if (!context) {
     return {
-      articles: [],
-      getAllArticles: () => [],
-      getPublishedArticles: () => [],
-      getArticleById: () => undefined,
-      addArticle: () => {},
+      articles: defaultStore.getAllArticles(),
+      getPublishedArticles: () => defaultStore.getAllArticles(),
+      getArticleById: (id: string) => defaultStore.getArticleById(id),
+      addArticle: (articleInput) => defaultStore.addArticle(articleInput),
     };
   }
   return context;
