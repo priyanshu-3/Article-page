@@ -1,66 +1,56 @@
-import { Article, CreateArticleInput } from '../types/article';
-import { MOCK_ARTICLES } from '../data/mockArticles';
+import { Article } from '../types/article';
+import { mockArticles } from '../data/mockArticles';
 
 export class ArticleStore {
-  private articles: Map<string, Article> = new Map();
+  private articles: Article[];
 
-  constructor(initialArticles: Article[] = MOCK_ARTICLES) {
-    this.seed(initialArticles);
+  constructor(initialArticles: Article[] = mockArticles) {
+    this.articles = [...initialArticles];
   }
 
   /**
-   * Seed or reseed the store with articles.
+   * Retrieve all articles sorted with most recent first.
    */
-  public seed(articles: Article[]): void {
-    this.articles.clear();
-    for (const article of articles) {
-      this.articles.set(article.id, { ...article });
-    }
-  }
-
-  /**
-   * Retrieves all articles sorted with most recent first.
-   */
-  public getAllArticles(): Article[] {
-    return Array.from(this.articles.values()).sort((a, b) => {
-      const dateA = new Date(a.publishDate).getTime();
-      const dateB = new Date(b.publishDate).getTime();
+  getAllArticles(): Article[] {
+    return [...this.articles].sort((a, b) => {
+      const dateA = new Date(a.publishDate || a.publishedAt || 0).getTime();
+      const dateB = new Date(b.publishDate || b.publishedAt || 0).getTime();
       return dateB - dateA;
     });
   }
 
   /**
-   * Fetches a single article by its unique id.
-   * Returns undefined if the article is not found.
+   * Fetch a single article by ID.
    */
-  public getArticleById(id: string): Article | undefined {
-    const article = this.articles.get(id);
-    return article ? { ...article } : undefined;
+  getArticleById(id: string): Article | undefined {
+    return this.articles.find((article) => article.id === id);
   }
 
   /**
-   * Adds a new article to the store dataset.
-   * Generates a unique ID if one is not provided.
+   * Add a new article to the dataset.
    */
-  public addArticle(articleInput: CreateArticleInput): Article {
-    const id = articleInput.id || this.generateId();
+  addArticle(article: Article): void {
+    const publishDate = article.publishDate || article.publishedAt || new Date().toISOString();
+    const publishedAt = article.publishedAt || publishDate;
+    const body = article.body || article.content || '';
+    const content = article.content || body;
+
     const newArticle: Article = {
-      ...articleInput,
-      id
+      ...article,
+      publishDate,
+      publishedAt,
+      body,
+      content,
     };
-    this.articles.set(id, newArticle);
-    return { ...newArticle };
+
+    this.articles.unshift(newArticle);
   }
 
   /**
-   * Clears all articles from the store.
+   * Reset or replace the dataset in the store.
    */
-  public clear(): void {
-    this.articles.clear();
-  }
-
-  private generateId(): string {
-    return `art_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+  setArticles(articles: Article[]): void {
+    this.articles = [...articles];
   }
 }
 
