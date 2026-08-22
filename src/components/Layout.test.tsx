@@ -2,6 +2,11 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { Layout } from './Layout';
 
+// Mock next/navigation
+jest.mock('next/navigation', () => ({
+  usePathname: () => '/',
+}));
+
 describe('Layout Component', () => {
   test('renders the navigation links and children content', () => {
     render(
