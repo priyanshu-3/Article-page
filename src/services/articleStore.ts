@@ -1,55 +1,53 @@
-import { Article } from '../types/article';
-import { mockArticles } from '../data/mockArticles';
+import { Article, CreateArticleInput } from '../types/article';
+import { MOCK_ARTICLES } from '../data/mockArticles';
 
 export class ArticleStore {
   private articles: Article[];
 
-  constructor(initialArticles: Article[] = mockArticles) {
+  constructor(initialArticles: Article[] = MOCK_ARTICLES) {
     this.articles = [...initialArticles];
   }
 
   /**
-   * Retrieve all articles sorted with most recent first.
+   * Retrieves all articles sorted with most recent first.
    */
-  getAllArticles(): Article[] {
-    return [...this.articles].sort((a, b) => {
-      const dateA = new Date(a.publishDate || a.publishedAt || 0).getTime();
-      const dateB = new Date(b.publishDate || b.publishedAt || 0).getTime();
-      return dateB - dateA;
-    });
+  public getAllArticles(): Article[] {
+    return [...this.articles].sort(
+      (a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime()
+    );
   }
 
   /**
-   * Fetch a single article by ID.
+   * Fetches a single article by id.
    */
-  getArticleById(id: string): Article | undefined {
+  public getArticleById(id: string): Article | undefined {
     return this.articles.find((article) => article.id === id);
   }
 
   /**
-   * Add a new article to the dataset.
+   * Adds a new article to the dataset.
+   * Auto-generates an ID if not provided, adds it to the store, and returns the newly created article.
    */
-  addArticle(article: Article): void {
-    const publishDate = article.publishDate || article.publishedAt || new Date().toISOString();
-    const publishedAt = article.publishedAt || publishDate;
-    const body = article.body || article.content || '';
-    const content = article.content || body;
+  public addArticle(articleData: CreateArticleInput): Article {
+    const id =
+      articleData.id ||
+      (typeof crypto !== 'undefined' && crypto.randomUUID
+        ? crypto.randomUUID()
+        : `article_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`);
 
     const newArticle: Article = {
-      ...article,
-      publishDate,
-      publishedAt,
-      body,
-      content,
+      ...articleData,
+      id,
     };
 
-    this.articles.unshift(newArticle);
+    this.articles.push(newArticle);
+    return newArticle;
   }
 
   /**
-   * Reset or replace the dataset in the store.
+   * Resets store back to specified articles or default mock dataset.
    */
-  setArticles(articles: Article[]): void {
+  public reset(articles: Article[] = MOCK_ARTICLES): void {
     this.articles = [...articles];
   }
 }
