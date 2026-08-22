@@ -10,29 +10,28 @@ interface LayoutProps {
 }
 
 export const Layout: React.FC<LayoutProps> = ({ children, currentPath }) => {
+  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
-  let pathname = '/';
-  try {
-    const nextPathname = usePathname();
-    if (nextPathname) {
-      pathname = nextPathname;
-    }
-  } catch (e) {
-    // Fallback for environments where usePathname is not available (e.g. testing)
-  }
 
-  const activePath = currentPath !== undefined ? currentPath : pathname;
+  // Use currentPath if provided (e.g. in tests), otherwise fallback to pathname from next/navigation, defaulting to '/'
+  const activePath = currentPath !== undefined ? currentPath : (pathname || '/');
 
   const navLinks = [
     { name: 'Home', href: '/' },
     { name: 'Publish', href: '/publish' },
   ];
 
+  const isLinkActive = (href: string) => {
+    if (href === '/') {
+      return activePath === '/' || activePath === '/home';
+    }
+    return activePath === href;
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans antialiased flex flex-col">
       {/* Persistent Navigation Bar */}
-      <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/80 backdrop-blur-md support-backdrop-blur:bg-white/60">
+      <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/95 backdrop-blur-md support-[backdrop-filter]:bg-white/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             {/* Logo / Brand */}
@@ -59,17 +58,17 @@ export const Layout: React.FC<LayoutProps> = ({ children, currentPath }) => {
             {/* Desktop Navigation Links */}
             <nav className="hidden md:flex items-center space-x-1 sm:space-x-4" aria-label="Main Navigation">
               {navLinks.map((link) => {
-                const isActive = activePath === link.href || (link.href === '/' && activePath === '/home');
+                const active = isLinkActive(link.href);
                 return (
                   <Link
                     key={link.href}
                     href={link.href}
                     className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                      isActive
-                        ? 'bg-slate-100 text-slate-900 font-semibold'
+                      active
+                        ? 'bg-slate-100 text-slate-900'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                     }`}
-                    aria-current={isActive ? 'page' : undefined}
+                    aria-current={active ? 'page' : undefined}
                   >
                     {link.name}
                   </Link>
@@ -106,18 +105,18 @@ export const Layout: React.FC<LayoutProps> = ({ children, currentPath }) => {
         {isMenuOpen && (
           <nav className="md:hidden border-t border-slate-200 bg-white px-4 pt-2 pb-4 space-y-1" id="mobile-menu" aria-label="Mobile Navigation">
             {navLinks.map((link) => {
-              const isActive = activePath === link.href || (link.href === '/' && activePath === '/home');
+              const active = isLinkActive(link.href);
               return (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsMenuOpen(false)}
                   className={`block rounded-md px-3 py-2 text-base font-medium transition-colors ${
-                    isActive
+                    active
                       ? 'bg-slate-100 text-slate-900 font-semibold'
                       : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                   }`}
-                  aria-current={isActive ? 'page' : undefined}
+                  aria-current={active ? 'page' : undefined}
                 >
                   {link.name}
                 </Link>
@@ -149,5 +148,3 @@ export const Layout: React.FC<LayoutProps> = ({ children, currentPath }) => {
     </div>
   );
 };
-
-export default Layout;
