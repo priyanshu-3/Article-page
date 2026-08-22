@@ -1,0 +1,66 @@
+.article-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.article-nav {
+  margin-bottom: 2rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  color: #4b5563;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
+}
+
+.back-link:hover {
+  color: #111827;
+  text-decoration: underline;
+}
+
+.article-header {
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.article-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #111827;
+  margin-bottom: 1rem;
+}
+
+.article-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.meta-separator {
+  color: #9ca3af;
+}
+
+.article-body {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: #374151;
+}
+
+.article-paragraph {
+  margin-bottom: 1.5rem;
+  white-space: pre-wrap;
+}
+
+.missing-article {
+  text-align: center;
+}
