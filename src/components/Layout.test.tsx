@@ -1,6 +1,11 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { Layout } from './Layout';
+
+// Mock next/navigation
+jest.mock('next/navigation', () => ({
+  usePathname: () => '/',
+}));
 
 describe('Layout Component', () => {
   test('renders the navigation links and children content', () => {
@@ -14,14 +19,14 @@ describe('Layout Component', () => {
     expect(screen.getByText('ArticleHub')).toBeInTheDocument();
 
     // Check that Home and Publish links are rendered
-    const homeLink = screen.getByRole('link', { name: /home/i });
-    const publishLink = screen.getByRole('link', { name: /publish/i });
+    const homeLinks = screen.getAllByRole('link', { name: /home/i });
+    const publishLinks = screen.getAllByRole('link', { name: /publish/i });
 
-    expect(homeLink).toBeInTheDocument();
-    expect(homeLink).toHaveAttribute('href', '/');
+    expect(homeLinks[0]).toBeInTheDocument();
+    expect(homeLinks[0]).toHaveAttribute('href', '/');
 
-    expect(publishLink).toBeInTheDocument();
-    expect(publishLink).toHaveAttribute('href', '/publish');
+    expect(publishLinks[0]).toBeInTheDocument();
+    expect(publishLinks[0]).toHaveAttribute('href', '/publish');
 
     // Check that children content is rendered
     expect(screen.getByText('Test Content')).toBeInTheDocument();
@@ -34,8 +39,8 @@ describe('Layout Component', () => {
       </Layout>
     );
 
-    const homeLink = screen.getByRole('link', { name: /home/i });
-    expect(homeLink).toHaveAttribute('aria-current', 'page');
+    const homeLinks = screen.getAllByRole('link', { name: /home/i });
+    expect(homeLinks[0]).toHaveAttribute('aria-current', 'page');
 
     rerender(
       <Layout currentPath="/publish">
@@ -43,7 +48,32 @@ describe('Layout Component', () => {
       </Layout>
     );
 
-    const publishLink = screen.getByRole('link', { name: /publish/i });
-    expect(publishLink).toHaveAttribute('aria-current', 'page');
+    const publishLinks = screen.getAllByRole('link', { name: /publish/i });
+    expect(publishLinks[0]).toHaveAttribute('aria-current', 'page');
+  });
+
+  test('toggles mobile navigation menu when button is clicked', () => {
+    render(
+      <Layout>
+        <div>Test Content</div>
+      </Layout>
+    );
+
+    // Mobile menu should not be visible initially
+    expect(screen.queryByLabelText(/mobile navigation/i)).not.toBeInTheDocument();
+
+    // Find and click the toggle button
+    const toggleButton = screen.getByRole('button', { name: /toggle navigation menu/i });
+    expect(toggleButton).toBeInTheDocument();
+    
+    fireEvent.click(toggleButton);
+
+    // Mobile menu should now be visible
+    const mobileNav = screen.getByLabelText(/mobile navigation/i);
+    expect(mobileNav).toBeInTheDocument();
+
+    // Click again to close
+    fireEvent.click(toggleButton);
+    expect(screen.queryByLabelText(/mobile navigation/i)).not.toBeInTheDocument();
   });
 });
